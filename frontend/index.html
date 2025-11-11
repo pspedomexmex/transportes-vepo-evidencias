@@ -3,40 +3,45 @@
   <head>
     <meta charset="utf-8" />
     <title>Recolección de Evidencias - Transportes Vepo</title>
+    <!-- Muy importante para Android / móviles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header>
-      <h1>Órdenes de recolección de evidencias</h1>
+      <h1>Órdenes de recolección</h1>
       <p class="subtitle">
-        Generadas automáticamente a partir de entregas con STATUS ENTREGADO (Twilio / WhatsApp).
+        Generadas desde entregas con STATUS ENTREGADO (Twilio / WhatsApp).
       </p>
     </header>
 
     <section class="controls">
-      <div>
-        <label for="filtro-status">Filtrar por estatus:</label>
+      <div class="controls-left">
+        <label for="filtro-status">Estatus:</label>
         <select id="filtro-status">
           <option value="">Todos</option>
           <option value="PENDIENTE">Pendiente</option>
           <option value="RECOLECTADO">Recolectado</option>
           <option value="ENTREGADO">Entregado</option>
         </select>
-        <button id="btn-recargar">Recargar</button>
       </div>
-      <div class="legend">
-        <span class="badge badge-alerta"></span> Pendiente con más de 3 días
-      </div>
+      <button id="btn-recargar">Recargar</button>
+    </section>
+
+    <section class="legend">
+      <span class="badge badge-alerta"></span>
+      <span>Alerta: pendiente con más de 3 días</span>
     </section>
 
     <section class="tabla-wrapper">
-      <table id="tabla-ordenes">
+      <!-- Vista tipo tabla (se verá solo en pantallas grandes) -->
+      <table id="tabla-ordenes" class="tabla-desktop">
         <thead>
           <tr>
             <th>ID</th>
             <th>Cliente</th>
             <th>Destino</th>
-            <th>OC Pedido</th>
+            <th>OC</th>
             <th>Equipo</th>
             <th>Operador</th>
             <th>Permisionario</th>
@@ -50,6 +55,12 @@
           <!-- Se llenará con JS -->
         </tbody>
       </table>
+
+      <!-- Vista tipo cards (para móviles) -->
+      <div id="lista-ordenes-movil" class="lista-movil">
+        <!-- Se llenará con JS -->
+      </div>
+
       <div id="mensaje-vacio" class="mensaje-vacio oculto">
         No hay órdenes para mostrar.
       </div>

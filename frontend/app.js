@@ -1,7 +1,8 @@
-// Ajusta esta URL cuando el backend esté en Render
+// Cuando esté en Render, solo cambias esta URL
 const BACKEND_URL = 'http://localhost:4000';
 
 const tablaBody = document.querySelector('#tabla-ordenes tbody');
+const listaMovil = document.getElementById('lista-ordenes-movil');
 const filtroStatus = document.getElementById('filtro-status');
 const btnRecargar = document.getElementById('btn-recargar');
 const mensajeVacio = document.getElementById('mensaje-vacio');
@@ -20,6 +21,7 @@ async function cargarOrdenes() {
 
     const ordenes = await resp.json();
     renderTabla(ordenes);
+    renderMovil(ordenes);
   } catch (err) {
     console.error(err);
     alert('Error al cargar órdenes. Revisa la consola.');
@@ -70,8 +72,69 @@ function renderTabla(ordenes) {
     tablaBody.appendChild(tr);
   }
 
-  // Agregar listeners a todos los select de status
+  // Listeners para los select de la tabla
   document.querySelectorAll('.select-status').forEach(sel => {
+    sel.addEventListener('change', onCambioStatus);
+  });
+}
+
+function renderMovil(ordenes) {
+  listaMovil.innerHTML = '';
+
+  if (!ordenes.length) {
+    // mensaje_vacio ya lo maneja renderTabla
+    return;
+  }
+
+  for (const ord of ordenes) {
+    const card = document.createElement('article');
+    card.classList.add('orden-card');
+    if (ord.requiere_alerta) {
+      card.classList.add('orden-card-alerta');
+    }
+
+    card.innerHTML = `
+      <header class="orden-card-header">
+        <div class="orden-card-id">ID #${ord.id}</div>
+        <div class="orden-card-status">
+          <span class="status-chip status-${(ord.evidencia_status || '').toLowerCase()}">
+            ${ord.evidencia_status}
+          </span>
+        </div>
+      </header>
+
+      <div class="orden-card-body">
+        <div><strong>Cliente:</strong> ${ord.cliente || ''}</div>
+        <div><strong>Destino:</strong> ${ord.destino || ''}</div>
+        <div><strong>OC:</strong> ${ord.oc_pedido || ''}</div>
+        <div><strong>Equipo:</strong> ${ord.equipo || ''}</div>
+        <div><strong>Operador:</strong> ${ord.operador || ''}</div>
+        <div><strong>Permisionario:</strong> ${ord.permisionario || ''}</div>
+        <div><strong>Días:</strong> ${ord.dias_desde_creacion ?? '-'}</div>
+        ${
+          ord.requiere_alerta
+            ? '<div class="orden-card-alerta-texto">⚠️ Pendiente con más de 3 días</div>'
+            : ''
+        }
+      </div>
+
+      <footer class="orden-card-footer">
+        <label>
+          Estatus:
+          <select data-id="${ord.id}" class="select-status-movil">
+            <option value="PENDIENTE" ${ord.evidencia_status === 'PENDIENTE' ? 'selected' : ''}>Pendiente</option>
+            <option value="RECOLECTADO" ${ord.evidencia_status === 'RECOLECTADO' ? 'selected' : ''}>Recolectado</option>
+            <option value="ENTREGADO" ${ord.evidencia_status === 'ENTREGADO' ? 'selected' : ''}>Entregado</option>
+          </select>
+        </label>
+      </footer>
+    `;
+
+    listaMovil.appendChild(card);
+  }
+
+  // Listeners para los select en móvil
+  document.querySelectorAll('.select-status-movil').forEach(sel => {
     sel.addEventListener('change', onCambioStatus);
   });
 }
@@ -94,7 +157,6 @@ async function onCambioStatus(e) {
       throw new Error('Error al actualizar estatus');
     }
 
-    // Recargar la tabla para actualizar chips, alertas, etc.
     await cargarOrdenes();
   } catch (err) {
     console.error(err);
