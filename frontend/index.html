@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Recolección de Evidencias - Transportes Vepo</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Órdenes de recolección de evidencias</h1>
+      <p class="subtitle">
+        Generadas automáticamente a partir de entregas con STATUS ENTREGADO (Twilio / WhatsApp).
+      </p>
+    </header>
+
+    <section class="controls">
+      <div>
+        <label for="filtro-status">Filtrar por estatus:</label>
+        <select id="filtro-status">
+          <option value="">Todos</option>
+          <option value="PENDIENTE">Pendiente</option>
+          <option value="RECOLECTADO">Recolectado</option>
+          <option value="ENTREGADO">Entregado</option>
+        </select>
+        <button id="btn-recargar">Recargar</button>
+      </div>
+      <div class="legend">
+        <span class="badge badge-alerta"></span> Pendiente con más de 3 días
+      </div>
+    </section>
+
+    <section class="tabla-wrapper">
+      <table id="tabla-ordenes">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Destino</th>
+            <th>OC Pedido</th>
+            <th>Equipo</th>
+            <th>Operador</th>
+            <th>Permisionario</th>
+            <th>Status evidencia</th>
+            <th>Días</th>
+            <th>Alerta</th>
+            <th>Actualizar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Se llenará con JS -->
+        </tbody>
+      </table>
+      <div id="mensaje-vacio" class="mensaje-vacio oculto">
+        No hay órdenes para mostrar.
+      </div>
+    </section>
+
+    <footer>
+      <small>Transportes Vepo · Sistema de recolección de evidencias</small>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
